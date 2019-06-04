@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
-import { FormGroup, FormControl } from '@angular/forms';
+import { FormGroup, FormControl, FormBuilder } from '@angular/forms';
 import { User } from './../../models/user';
 
 @Component({
@@ -13,13 +13,12 @@ export class SignupReactiveFormComponent implements OnInit {
   user: User = new User();
   userForm: FormGroup;
 
-  constructor() { }
+  constructor(
+    private fb: FormBuilder
+  ) { }
 
   ngOnInit() {
-    this.createForm();
-
-    this.setFormValues();
-    // this.patchFormValues();
+    this.buildForm();
   }
 
   private createForm() {
@@ -28,6 +27,15 @@ export class SignupReactiveFormComponent implements OnInit {
       lastName: new FormControl(),
       email: new FormControl(),
       sendProducts: new FormControl(true)
+    });
+  }
+
+  private buildForm() {
+    this.userForm = this.fb.group({
+      firstName: '',
+      lastName: {value: 'Zhyrytskyy', disabled: true},
+      email: [''],
+      sendProducts: true
     });
   }
 
@@ -55,6 +63,5 @@ export class SignupReactiveFormComponent implements OnInit {
       lastName: 'Zhyrytskyy'
     });
   }
-
 
 }

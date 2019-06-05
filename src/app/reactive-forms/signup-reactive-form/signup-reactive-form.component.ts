@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
+import { Subscription } from 'rxjs';
 
 import { User } from './../../models/user';
 import { CustomValidators } from './../../validators';
@@ -9,7 +10,7 @@ import { CustomValidators } from './../../validators';
   templateUrl: './signup-reactive-form.component.html',
   styleUrls: ['./signup-reactive-form.component.css']
 })
-export class SignupReactiveFormComponent implements OnInit {
+export class SignupReactiveFormComponent implements OnInit, OnDestroy {
   countries: Array<string> = ['Ukraine', 'Armenia', 'Belarus', 'Hungary', 'Kazakhstan', 'Poland', 'Russia'];
   user: User = new User();
   userForm: FormGroup;
@@ -19,6 +20,8 @@ export class SignupReactiveFormComponent implements OnInit {
     phone: 'Phone'
   };
 
+  private sub: Subscription;
+
   constructor(
     private fb: FormBuilder
   ) { }
@@ -26,6 +29,17 @@ export class SignupReactiveFormComponent implements OnInit {
   ngOnInit() {
     this.buildForm();
     // this.createForm();
+
+    this.watchValueChanges();
+  }
+
+  ngOnDestroy() {
+    this.sub.unsubscribe();
+  }
+
+  private watchValueChanges() {
+    this.sub = this.userForm.get('notification').valueChanges
+      .subscribe(value => this.setNotification(value));
   }
 
   private createForm() {
@@ -80,7 +94,7 @@ export class SignupReactiveFormComponent implements OnInit {
     console.log(`Saved: ${JSON.stringify(this.userForm.getRawValue())}`);
   }
 
-  onSetNotification(notifyVia: string) {
+  setNotification(notifyVia: string) {
     const controls = new Map();
     controls.set('phoneControl', this.userForm.get('phone'));
     controls.set('emailGroup', this.userForm.get('emailGroup'));

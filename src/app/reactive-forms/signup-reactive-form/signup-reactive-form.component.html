@@ -167,7 +167,8 @@
           </div>
         </div>
 
-        <div formGroupName="addresses">
+        <div formArrayName="addresses">
+          <div formGroupName="0">
           <div *ngIf="userForm.get('sendProducts').value">
           <div class="form-group" >
             <label class="col-md-2 control-label">Address Type</label>
@@ -237,6 +238,7 @@
                      formControlName="street2">
             </div>
           </div>
+        </div>
         </div>
         </div>
 

@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { FormGroup, FormControl, FormBuilder, Validators, AbstractControl } from '@angular/forms';
+import { FormGroup, FormControl, FormBuilder, Validators, FormArray, AbstractControl } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 
@@ -51,6 +51,10 @@ export class SignupReactiveFormComponent implements OnInit, OnDestroy {
   onBlur() {
     const emailControl = this.userForm.get('emailGroup.email');
     this.setValidationMessage(emailControl, 'email');
+  }
+
+  get addresses(): FormArray {
+    return <FormArray>this.userForm.get('addresses');
   }
 
   private watchValueChanges() {
@@ -108,7 +112,7 @@ export class SignupReactiveFormComponent implements OnInit, OnDestroy {
       // serviceLevel: ['', CustomValidators.serviceLevelRange(1, 3)],
       serviceLevel: [''],
       sendProducts: true,
-      addresses: this.buildAddress()
+      addresses: this.fb.array([this.buildAddress()])
     });
   }
 

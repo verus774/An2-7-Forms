@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormControl, FormBuilder, Validators, AbstractControl } from '@angular/forms';
 import { Subscription } from 'rxjs';
+import { debounceTime } from 'rxjs/operators';
 
 import { User } from './../../models/user';
 import { CustomValidators } from './../../validators';
@@ -57,7 +58,11 @@ export class SignupReactiveFormComponent implements OnInit, OnDestroy {
       .subscribe(value => this.setNotification(value));
 
     const emailControl = this.userForm.get('emailGroup.email');
-    const sub = emailControl.valueChanges.subscribe(value =>
+    const sub = emailControl.valueChanges
+      .pipe(
+        debounceTime(1000)
+      )
+      .subscribe(value =>
       this.setValidationMessage(emailControl, 'email')
     );
     this.sub.add(sub);

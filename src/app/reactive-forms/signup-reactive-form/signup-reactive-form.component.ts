@@ -108,12 +108,14 @@ export class SignupReactiveFormComponent implements OnInit, OnDestroy {
       // serviceLevel: ['', CustomValidators.serviceLevelRange(1, 3)],
       serviceLevel: [''],
       sendProducts: true,
-      addressType: 'home',
-      country: '',
-      city: '',
-      zip: '',
-      street1: '',
-      street2: ''
+      addresses: this.fb.group({
+        addressType: 'home',
+        country: '',
+        city: '',
+        zip: '',
+        street1: '',
+        street2: ''
+      })
     });
   }
 

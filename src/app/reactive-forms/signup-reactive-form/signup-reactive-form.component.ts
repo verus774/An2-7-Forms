@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
+import { FormGroup, FormControl, FormBuilder, Validators, AbstractControl } from '@angular/forms';
 import { Subscription } from 'rxjs';
 
 import { User } from './../../models/user';
@@ -14,6 +14,7 @@ export class SignupReactiveFormComponent implements OnInit, OnDestroy {
   countries: Array<string> = ['Ukraine', 'Armenia', 'Belarus', 'Hungary', 'Kazakhstan', 'Poland', 'Russia'];
   user: User = new User();
   userForm: FormGroup;
+  validationMessage: string;
   placeholder = {
     email: 'Email (required)',
     confirmEmail: 'Confirm Email (required)',
@@ -21,6 +22,15 @@ export class SignupReactiveFormComponent implements OnInit, OnDestroy {
   };
 
   private sub: Subscription;
+  private validationMessagesMap = {
+    email: {
+      required: 'Please enter your email address.',
+      pattern: 'Please enter a valid email address.',
+      email: 'Please enter a valid email address.',
+      asyncEmailInvalid:
+        'This email already exists. Please enter other email address.'
+    }
+  };
 
   constructor(
     private fb: FormBuilder
@@ -37,9 +47,20 @@ export class SignupReactiveFormComponent implements OnInit, OnDestroy {
     this.sub.unsubscribe();
   }
 
+  onBlur() {
+    const emailControl = this.userForm.get('emailGroup.email');
+    this.setValidationMessage(emailControl, 'email');
+  }
+
   private watchValueChanges() {
     this.sub = this.userForm.get('notification').valueChanges
       .subscribe(value => this.setNotification(value));
+
+    const emailControl = this.userForm.get('emailGroup.email');
+    const sub = emailControl.valueChanges.subscribe(value =>
+      this.setValidationMessage(emailControl, 'email')
+    );
+    this.sub.add(sub);
   }
 
   private createForm() {
@@ -135,6 +156,16 @@ export class SignupReactiveFormComponent implements OnInit, OnDestroy {
       };
     }
     controls.forEach(control => control.updateValueAndValidity());
+  }
+
+  private setValidationMessage(c: AbstractControl, controlName: string) {
+    this.validationMessage = '';
+
+    if ((c.touched || c.dirty) && c.errors) {
+      this.validationMessage = Object.keys(c.errors)
+        .map(key => this.validationMessagesMap[controlName][key])
+        .join(' ');
+    }
   }
 
   private setFormValues() {

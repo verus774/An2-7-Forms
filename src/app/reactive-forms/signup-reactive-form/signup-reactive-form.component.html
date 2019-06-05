@@ -177,7 +177,7 @@
                   <input type="radio" id="{{'addressType1Id' + i}}" value="home" formControlName="addressType">Home
                 </label>
                 <label class="radio-inline">
-                  <input type="radio" id="{{'addressType2Id' + i}}"" value="work" formControlName="addressType">Work
+                  <input type="radio" id="{{'addressType2Id' + i}}" value="work" formControlName="addressType">Work
                 </label>
                 <label class="radio-inline">
                   <input type="radio" id="{{'addressType3Id' + i}}" value="other" formControlName="addressType">Other
@@ -244,6 +244,16 @@
 
         <div class="form-group">
           <div class="col-md-4 col-md-offset-2">
+            <button class="btn btn-primary"
+                    type="button"
+                    (click)="onAddAddress()">
+              Add Another Address
+            </button>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div class="col-md-4 col-md-offset-2">
                         <span>
                             <button class="btn btn-primary"
                                     type="submit"
@@ -263,3 +273,4 @@
 <br>Valid: {{ userForm.valid }}
 <br>Value: {{ userForm.value | json }}
 <br>Form Status: {{userForm.status }}
+<br>Street: {{addresses.get('0.street1')?.value}}

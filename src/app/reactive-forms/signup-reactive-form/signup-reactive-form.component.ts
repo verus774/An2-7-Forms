@@ -136,6 +136,10 @@ export class SignupReactiveFormComponent implements OnInit, OnDestroy {
     console.log(`Saved: ${JSON.stringify(this.userForm.getRawValue())}`);
   }
 
+  onAddAddress(): void {
+    this.addresses.push(this.buildAddress());
+  }
+
   setNotification(notifyVia: string) {
     const controls = new Map();
     controls.set('phoneControl', this.userForm.get('phone'));

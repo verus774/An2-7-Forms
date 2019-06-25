@@ -11,4 +11,3 @@ import { AsyncEmailValidatorDirective } from './async-email-validator.directive'
   exports: [ServiceLevelDirective, AsyncEmailValidatorDirective]
 })
 export class ValidatorsModule { }
-1
